@@ -68,8 +68,8 @@ export default function Blog() {
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {blogs.map((blog) => {
-              const imgMatch = blog.content?.match(/!\[.*?\]\((.*?)\)/);
-              const displayImage = blog.coverImage || (imgMatch ? imgMatch[1] : null);
+              const imgMatch = blog.content?.match(/!\[[^\]]*\]\(([^)]+)\)/);
+              const displayImage = blog.coverImage || (imgMatch ? imgMatch[1].trim() : null);
 
               return (
               <div key={blog.id} className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300 fade-up-item group flex flex-col">

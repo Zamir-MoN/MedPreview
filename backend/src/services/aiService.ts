@@ -44,6 +44,10 @@ Format the output with clear Markdown headings, bullet points, and paragraphs. R
       // Output is not JSON, which is fine. Use raw text.
     }
 
+    if (!finalContent || typeof finalContent !== 'string') {
+       finalContent = '';
+    }
+
     // Try to extract the Conclusion or a good summary for the image prompt
     let imagePrompt = topic;
     const conclusionMatch = finalContent.match(/##\s*Conclusion\s*([\s\S]*?)(?:##|$)/i);

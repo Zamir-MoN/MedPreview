@@ -209,11 +209,11 @@ export default function AdminBlogManager() {
                 </div>
               </div>
               
-              {editingBlog.content && editingBlog.content.match(/!\[.*?\]\((.*?)\)/) && (
+              {editingBlog.content && editingBlog.content.match(/!\[[^\]]*\]\(([^)]+)\)/) && (
                 <div className="mt-2">
                   <label className="block text-xs font-bold text-gray-500 mb-2">Generated Image Preview</label>
                   <img 
-                    src={editingBlog.content.match(/!\[.*?\]\((.*?)\)/)[1]} 
+                    src={editingBlog.content.match(/!\[[^\]]*\]\(([^)]+)\)/)[1].trim()} 
                     alt="Blog Cover" 
                     className="w-full max-h-48 object-cover rounded-xl border border-gray-200"
                   />
