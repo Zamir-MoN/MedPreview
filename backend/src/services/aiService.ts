@@ -29,7 +29,22 @@ Format the output with clear Markdown headings, bullet points, and paragraphs. R
       }
     );
 
-    return response.data.response;
+    let finalContent = response.data.response;
+    
+    // The AI sometimes wraps its response in a JSON object despite instructions
+    try {
+      const parsed = JSON.parse(finalContent);
+      if (parsed && typeof parsed === 'object') {
+        const values = Object.values(parsed);
+        if (values.length > 0 && typeof values[0] === 'string') {
+          finalContent = values[0];
+        }
+      }
+    } catch (e) {
+      // Output is not JSON, which is fine. Use raw text.
+    }
+
+    return finalContent;
   } catch (error: any) {
     console.error('Error calling AI API:', error.response?.data || error.message);
     throw new Error('Failed to generate AI content');
