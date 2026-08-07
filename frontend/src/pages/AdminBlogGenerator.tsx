@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { Helmet } from 'react-helmet-async';
-import { Sparkles, Save, X, Edit3, FileText } from 'lucide-react';
+import { Sparkles, Save, X, Edit3, FileText, Eye } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import ReactMarkdown from 'react-markdown';
 
 export default function AdminBlogGenerator() {
   const [topic, setTopic] = useState('');
@@ -14,6 +15,7 @@ export default function AdminBlogGenerator() {
   const [coverImage, setCoverImage] = useState<string | null>(null);
   const [blogMeta, setBlogMeta] = useState({ title: '', category: '', author: 'Dr. Jonathan', readTime: '5 min' });
   const [publishStatus, setPublishStatus] = useState({ loading: false, success: false, error: '' });
+  const [viewMode, setViewMode] = useState<'edit' | 'preview'>('edit');
 
   const handleGenerate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -61,7 +63,7 @@ export default function AdminBlogGenerator() {
     }
   };
 
-  const handlePublish = async () => {
+  const handlePublish = async (status: 'PUBLISHED' | 'DRAFT' = 'PUBLISHED') => {
     if (!generatedContent || !blogMeta.title || !blogMeta.category) {
       toast.error('Please fill in title and category before publishing.');
       return;
@@ -82,10 +84,10 @@ export default function AdminBlogGenerator() {
         readTime: blogMeta.readTime,
         content: generatedContent,
         coverImage,
-        status: 'PUBLISHED'
+        status: status
       });
       
-      setPublishStatus({ loading: false, success: true, error: '' });
+      toast.success(status === 'PUBLISHED' ? 'Blog published successfully!' : 'Blog saved as draft successfully!');
       setTimeout(() => {
         setGeneratedContent('');
         setCoverImage(null);
@@ -171,16 +173,41 @@ export default function AdminBlogGenerator() {
           <div className="lg:col-span-2">
             <div className="bg-white rounded-3xl shadow-sm border border-gray-100 flex flex-col h-full min-h-[600px] overflow-hidden">
               <div className="bg-gray-50 p-4 border-b border-gray-100 flex justify-between items-center">
-                <div className="flex items-center gap-2 text-gray-600 font-medium">
-                  <Edit3 className="w-5 h-5" /> Editor & Preview
+                <div className="flex items-center gap-4 text-gray-600 font-medium">
+                  <span className="flex items-center gap-2"><Edit3 className="w-5 h-5" /> Editor & Preview</span>
+                  {generatedContent && (
+                    <div className="flex bg-gray-200 rounded-lg p-1 ml-4">
+                      <button 
+                        onClick={() => setViewMode('edit')}
+                        className={`px-3 py-1 text-xs font-bold rounded-md transition-colors ${viewMode === 'edit' ? 'bg-white shadow text-dark' : 'text-gray-500 hover:text-dark'}`}
+                      >
+                        Edit
+                      </button>
+                      <button 
+                        onClick={() => setViewMode('preview')}
+                        className={`px-3 py-1 text-xs font-bold rounded-md transition-colors flex items-center gap-1 ${viewMode === 'preview' ? 'bg-white shadow text-dark' : 'text-gray-500 hover:text-dark'}`}
+                      >
+                        <Eye className="w-3 h-3" /> Preview
+                      </button>
+                    </div>
+                  )}
                 </div>
-                <button 
-                  onClick={handlePublish}
-                  disabled={!generatedContent || publishStatus.loading}
-                  className="bg-accent text-white px-6 py-2 rounded-lg font-bold shadow-md hover:bg-cyan-600 transition-colors disabled:opacity-50 flex items-center gap-2"
-                >
-                  {publishStatus.loading ? 'Publishing...' : <><Save className="w-4 h-4" /> Publish Blog</>}
-                </button>
+                <div className="flex gap-2">
+                  <button 
+                    onClick={() => handlePublish('DRAFT')}
+                    disabled={!generatedContent || publishStatus.loading}
+                    className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-bold hover:bg-gray-300 transition-colors disabled:opacity-50 flex items-center gap-2"
+                  >
+                    {publishStatus.loading ? 'Saving...' : 'Save as Draft'}
+                  </button>
+                  <button 
+                    onClick={() => handlePublish('PUBLISHED')}
+                    disabled={!generatedContent || publishStatus.loading}
+                    className="bg-accent text-white px-6 py-2 rounded-lg font-bold shadow-md hover:bg-cyan-600 transition-colors disabled:opacity-50 flex items-center gap-2"
+                  >
+                    {publishStatus.loading ? 'Publishing...' : <><Save className="w-4 h-4" /> Publish Blog</>}
+                  </button>
+                </div>
               </div>
 
               {publishStatus.success && (
@@ -209,7 +236,7 @@ export default function AdminBlogGenerator() {
                   </div>
                   <hr className="border-gray-100 my-2" />
                   
-                  {coverImage && (
+                  {coverImage && viewMode === 'edit' && (
                     <div className="mt-2">
                       <label className="block text-xs font-bold text-gray-500 mb-2">Generated Image Preview</label>
                       <img 
@@ -220,12 +247,27 @@ export default function AdminBlogGenerator() {
                     </div>
                   )}
 
-                  <textarea 
-                    data-lenis-prevent
-                    value={generatedContent}
-                    onChange={e => setGeneratedContent(e.target.value)}
-                    className="w-full flex-grow p-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm text-gray-700 font-mono resize-none min-h-[400px]"
-                  />
+                  {viewMode === 'edit' ? (
+                    <textarea 
+                      data-lenis-prevent
+                      value={generatedContent}
+                      onChange={e => setGeneratedContent(e.target.value)}
+                      className="w-full flex-grow p-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm text-gray-700 font-mono resize-none min-h-[400px]"
+                    />
+                  ) : (
+                    <div className="flex-grow p-6 bg-white border border-gray-200 rounded-xl overflow-y-auto">
+                      {coverImage && (
+                        <img 
+                          src={coverImage} 
+                          alt="Preview Cover" 
+                          className="w-full max-h-[400px] object-cover rounded-2xl mb-8"
+                        />
+                      )}
+                      <div className="prose prose-lg prose-blue max-w-none prose-headings:text-dark prose-p:text-gray-600 prose-a:text-primary prose-li:text-gray-600">
+                        <ReactMarkdown>{generatedContent}</ReactMarkdown>
+                      </div>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <div className="flex-grow flex flex-col items-center justify-center text-gray-400 p-10 text-center">

@@ -21,7 +21,9 @@ export const generateAiBlog = async (req: Request, res: Response): Promise<void>
 
 export const getBlogs = async (req: Request, res: Response): Promise<void> => {
   try {
+    const isAdmin = req.query.admin === 'true';
     const blogs = await prisma.blog.findMany({
+      where: isAdmin ? undefined : { status: 'PUBLISHED' },
       orderBy: { createdAt: 'desc' }
     });
     res.json({ success: true, blogs });

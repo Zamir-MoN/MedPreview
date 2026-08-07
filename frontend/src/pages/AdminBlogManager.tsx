@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Helmet } from 'react-helmet-async';
-import { Edit3, Trash2, Eye, EyeOff, Plus, FileText, X, Check, Image as ImageIcon, Loader2 } from 'lucide-react';
+import { Edit3, Trash2, Eye, EyeOff, Plus, FileText, X, Check, Image as ImageIcon, Loader2, Globe } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
@@ -20,7 +20,7 @@ export default function AdminBlogManager() {
 
   const fetchBlogs = async () => {
     try {
-      const response = await axios.get('/api/blogs');
+      const response = await axios.get('/api/blogs?admin=true');
       if (response.data.success) {
         setBlogs(response.data.blogs);
       }
@@ -181,16 +181,18 @@ export default function AdminBlogManager() {
                         <div className="flex justify-end gap-2">
                           <button 
                             onClick={() => toggleStatus(blog)}
-                            title={blog.status === 'PUBLISHED' ? 'Unpublish' : 'Publish'}
+                            title={blog.status === 'PUBLISHED' ? "Unpublish" : "Publish"}
                             className={`p-2 rounded-lg transition-colors ${
-                              blog.status === 'PUBLISHED' ? 'text-orange-500 hover:bg-orange-50' : 'text-green-500 hover:bg-green-50'
+                              blog.status === 'PUBLISHED' 
+                                ? 'text-green-600 hover:bg-green-50' 
+                                : 'text-orange-500 hover:bg-orange-50'
                             }`}
                           >
-                            {blog.status === 'PUBLISHED' ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                            {blog.status === 'PUBLISHED' ? <Globe className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
                           </button>
                           <button 
                             onClick={() => handleEditClick(blog)}
-                            className="p-2 text-blue-500 hover:bg-blue-50 rounded-lg transition-colors"
+                            className="p-2 text-primary hover:bg-blue-50 rounded-lg transition-colors"
                           >
                             <Edit3 className="w-4 h-4" />
                           </button>
