@@ -158,14 +158,6 @@ export default function AdminBlogManager() {
                             {blog.status === 'PUBLISHED' ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                           </button>
                           <button 
-                            onClick={() => generateImage(blog.id)}
-                            disabled={generatingImageId === blog.id}
-                            title="Generate AI Image"
-                            className="p-2 text-purple-500 hover:bg-purple-50 rounded-lg transition-colors disabled:opacity-50"
-                          >
-                            {generatingImageId === blog.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <ImageIcon className="w-4 h-4" />}
-                          </button>
-                          <button 
                             onClick={() => setEditingBlog(blog)}
                             className="p-2 text-blue-500 hover:bg-blue-50 rounded-lg transition-colors"
                           >
