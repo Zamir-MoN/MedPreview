@@ -61,6 +61,10 @@ export default function BlogPost() {
     );
   }
 
+  const imgMatch = blog.content?.match(/!\[[^\]]*\]\(([^)]+)\)/);
+  const displayImage = imgMatch ? imgMatch[1].trim() : null;
+  const cleanContent = blog.content?.replace(/!\[[^\]]*\]\(([^)]+)\)\n*/, '');
+
   return (
     <div className="pt-24 md:pt-32 pb-20">
       <Helmet>
@@ -86,10 +90,18 @@ export default function BlogPost() {
           </div>
         </div>
 
+        {displayImage && (
+          <img 
+            src={displayImage} 
+            alt={blog.title} 
+            className="w-full h-auto rounded-3xl mb-10 object-cover max-h-[500px] shadow-sm" 
+          />
+        )}
+
         {/* Content rendering using dangerouslySetInnerHTML because it's rich HTML/Markdown converted */}
         <div 
           className="prose prose-lg prose-blue max-w-none fade-up-item prose-headings:text-dark prose-p:text-gray-600 prose-a:text-primary"
-          dangerouslySetInnerHTML={{ __html: blog.content.replace(/\n/g, '<br />') }} // Simple br replacement for markdown-like text, would ideally use a markdown parser if raw text
+          dangerouslySetInnerHTML={{ __html: cleanContent.replace(/\n/g, '<br />') }} // Simple br replacement for markdown-like text, would ideally use a markdown parser if raw text
         />
       </div>
     </div>
