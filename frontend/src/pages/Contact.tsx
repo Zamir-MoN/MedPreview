@@ -154,7 +154,7 @@ export default function Contact() {
 
               <div className="mb-8">
                 <label className="block text-sm font-bold text-gray-700 mb-2">Additional Message</label>
-                <textarea rows={4} name="message" value={formData.message} onChange={handleChange} className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all resize-none"></textarea>
+                <textarea data-lenis-prevent rows={4} name="message" value={formData.message} onChange={handleChange} className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all resize-none"></textarea>
               </div>
 
               <button 

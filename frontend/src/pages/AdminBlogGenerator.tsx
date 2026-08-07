@@ -197,6 +197,7 @@ export default function AdminBlogGenerator() {
                   </div>
                   <hr className="border-gray-100 my-2" />
                   <textarea 
+                    data-lenis-prevent
                     value={generatedContent}
                     onChange={e => setGeneratedContent(e.target.value)}
                     className="w-full flex-grow p-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm text-gray-700 font-mono resize-none min-h-[400px]"

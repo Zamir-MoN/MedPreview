@@ -193,6 +193,7 @@ export default function AdminBlogManager() {
               <div className="flex-grow flex flex-col mt-2">
                 <label className="block text-xs font-bold text-gray-500 mb-1">Content (Markdown)</label>
                 <textarea 
+                  data-lenis-prevent
                   value={editingBlog.content}
                   onChange={e => setEditingBlog({...editingBlog, content: e.target.value})}
                   className="w-full flex-grow min-h-[300px] p-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm text-gray-700 font-mono resize-none"
