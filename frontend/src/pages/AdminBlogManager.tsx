@@ -56,7 +56,8 @@ export default function AdminBlogManager() {
       await axios.put(`/api/blogs/${editingBlog.id}`, {
         title: editingBlog.title,
         category: editingBlog.category,
-        content: editingBlog.content
+        content: editingBlog.content,
+        coverImage: editingBlog.coverImage
       });
       setBlogs(blogs.map(b => b.id === editingBlog.id ? editingBlog : b));
       setEditingBlog(null);
@@ -231,16 +232,25 @@ export default function AdminBlogManager() {
                 </div>
               </div>
               
-              {editingBlog.coverImage && (
-                <div className="mt-2">
-                  <label className="block text-xs font-bold text-gray-500 mb-2">Generated Image Preview</label>
-                  <img 
-                    src={editingBlog.coverImage} 
-                    alt="Blog Cover" 
-                    className="w-full max-h-48 object-cover rounded-xl border border-gray-200"
-                  />
-                </div>
-              )}
+              <div className="mt-2">
+                <label className="block text-xs font-bold text-gray-500 mb-1">Cover Image URL</label>
+                <input 
+                  value={editingBlog.coverImage || ''} 
+                  onChange={e => setEditingBlog({...editingBlog, coverImage: e.target.value})} 
+                  placeholder="Paste an image URL here..."
+                  className="w-full px-4 py-2 rounded-xl bg-gray-50 border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 mb-3" 
+                />
+                {editingBlog.coverImage && (
+                  <div>
+                    <label className="block text-xs font-bold text-gray-500 mb-2">Image Preview</label>
+                    <img 
+                      src={editingBlog.coverImage} 
+                      alt="Blog Cover" 
+                      className="w-full max-h-48 object-cover rounded-xl border border-gray-200"
+                    />
+                  </div>
+                )}
+              </div>
               
               <div className="flex-grow flex flex-col mt-2">
                 <label className="block text-xs font-bold text-gray-500 mb-1">Content (Markdown)</label>
