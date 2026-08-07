@@ -87,7 +87,7 @@ export default function AdminBlogGenerator() {
   };
 
   return (
-    <div className="pt-24 md:pt-32 pb-20 bg-gray-50 min-h-screen">
+    <div className="min-h-screen bg-gray-50 py-12">
       <Helmet>
         <title>Admin - AI Blog Generator</title>
       </Helmet>
