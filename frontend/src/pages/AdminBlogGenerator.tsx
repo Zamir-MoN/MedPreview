@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { Helmet } from 'react-helmet-async';
-import { Sparkles, Save, X, Edit3 } from 'lucide-react';
+import { Sparkles, Save, X, Edit3, FileText } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export default function AdminBlogGenerator() {
   const [topic, setTopic] = useState('');
@@ -92,6 +93,17 @@ export default function AdminBlogGenerator() {
       </Helmet>
 
       <div className="container mx-auto px-6 max-w-6xl">
+        {/* Admin Navigation */}
+        <div className="flex flex-wrap gap-4 items-center justify-between bg-white p-4 rounded-2xl shadow-sm border border-gray-100 mb-8">
+          <div className="flex items-center gap-6">
+            <Link to="/admin/blogs" className="text-gray-500 font-medium hover:text-primary transition-colors">Manage Blogs</Link>
+            <Link to="/admin/ai-generator" className="text-primary font-bold px-4 py-2 bg-blue-50 rounded-xl">AI Generator</Link>
+          </div>
+          <Link to="/admin/blogs" className="bg-primary text-white px-4 py-2 rounded-xl text-sm font-bold shadow-md shadow-primary/20 hover:-translate-y-1 transition-all flex items-center gap-2">
+            <FileText className="w-4 h-4" /> View All Blogs
+          </Link>
+        </div>
+
         <div className="flex items-center gap-4 mb-10">
           <div className="bg-primary/10 p-3 rounded-2xl"><Sparkles className="text-primary w-8 h-8" /></div>
           <div>

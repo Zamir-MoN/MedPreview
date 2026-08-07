@@ -14,6 +14,7 @@ import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
 import Contact from './pages/Contact';
 import AdminBlogGenerator from './pages/AdminBlogGenerator';
+import AdminBlogManager from './pages/AdminBlogManager';
 
 function App() {
   useEffect(() => {
@@ -54,6 +55,7 @@ function App() {
           {/* Admin Routes */}
           <Route path="/admin">
             <Route path="ai-generator" element={<AdminBlogGenerator />} />
+            <Route path="blogs" element={<AdminBlogManager />} />
           </Route>
         </Routes>
       </BrowserRouter>

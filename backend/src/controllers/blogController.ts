@@ -61,3 +61,33 @@ export const createBlog = async (req: Request, res: Response): Promise<void> => 
     res.status(500).json({ success: false, message: 'Failed to create blog', error: error.message });
   }
 };
+
+export const updateBlog = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const id = req.params.id as string;
+    const updateData = req.body;
+    
+    const blog = await prisma.blog.update({
+      where: { id },
+      data: updateData
+    });
+    
+    res.json({ success: true, blog });
+  } catch (error: any) {
+    res.status(500).json({ success: false, message: 'Failed to update blog', error: error.message });
+  }
+};
+
+export const deleteBlog = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const id = req.params.id as string;
+    
+    await prisma.blog.delete({
+      where: { id }
+    });
+    
+    res.json({ success: true, message: 'Blog deleted successfully' });
+  } catch (error: any) {
+    res.status(500).json({ success: false, message: 'Failed to delete blog', error: error.message });
+  }
+};
