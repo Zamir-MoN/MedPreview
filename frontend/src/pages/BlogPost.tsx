@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import axios from 'axios';
 import { Calendar, Clock, User, ArrowLeft } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
 import { animateFadeUp } from '../animations/gsap';
 
 interface BlogType {
@@ -98,11 +99,9 @@ export default function BlogPost() {
           />
         )}
 
-        {/* Content rendering using dangerouslySetInnerHTML because it's rich HTML/Markdown converted */}
-        <div 
-          className="prose prose-lg prose-blue max-w-none fade-up-item prose-headings:text-dark prose-p:text-gray-600 prose-a:text-primary"
-          dangerouslySetInnerHTML={{ __html: cleanContent.replace(/\n/g, '<br />') }} // Simple br replacement for markdown-like text, would ideally use a markdown parser if raw text
-        />
+        <div className="prose prose-lg prose-blue max-w-none fade-up-item prose-headings:text-dark prose-p:text-gray-600 prose-a:text-primary prose-li:text-gray-600">
+          <ReactMarkdown>{cleanContent}</ReactMarkdown>
+        </div>
       </div>
     </div>
   );
