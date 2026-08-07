@@ -7,6 +7,7 @@ export default function AdminBlogGenerator() {
   const [topic, setTopic] = useState('');
   const [tone, setTone] = useState('Professional and informative');
   const [loading, setLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
   const [generatedContent, setGeneratedContent] = useState('');
   const [blogMeta, setBlogMeta] = useState({ title: '', category: '', author: 'Dr. Jonathan', readTime: '5 min' });
   const [publishStatus, setPublishStatus] = useState({ loading: false, success: false, error: '' });
@@ -16,8 +17,18 @@ export default function AdminBlogGenerator() {
     if (!topic) return;
     
     setLoading(true);
+    setProgress(0);
     setGeneratedContent('');
     setPublishStatus({ loading: false, success: false, error: '' });
+
+    // Progress bar simulation (approximating 60-120s generation time)
+    const interval = setInterval(() => {
+      setProgress(prev => {
+        if (prev >= 98) return 98;
+        const increment = prev < 50 ? 5 : prev < 80 ? 1 : 0.2;
+        return prev + increment;
+      });
+    }, 1000);
 
     try {
       const response = await axios.post('/api/blogs/generate-ai', {
@@ -33,7 +44,9 @@ export default function AdminBlogGenerator() {
     } catch (error: any) {
       alert('Failed to generate AI content. Please try again.');
     } finally {
-      setLoading(false);
+      clearInterval(interval);
+      setProgress(100);
+      setTimeout(() => setLoading(false), 800);
     }
   };
 
@@ -118,7 +131,14 @@ export default function AdminBlogGenerator() {
             {loading && (
               <div className="bg-blue-50 border border-blue-100 p-6 rounded-3xl text-center">
                 <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                <p className="text-primary font-medium text-sm">MedEngine AI is generating your content. This usually takes 15-45 seconds...</p>
+                <p className="text-primary font-medium text-sm mb-4">MedEngine AI is generating your content...</p>
+                <div className="w-full bg-blue-200/50 rounded-full h-2 overflow-hidden">
+                  <div 
+                    className="bg-primary h-2 rounded-full transition-all duration-1000 ease-out" 
+                    style={{ width: `${Math.round(progress)}%` }}
+                  ></div>
+                </div>
+                <p className="text-xs text-blue-500 mt-2 font-bold">{Math.round(progress)}%</p>
               </div>
             )}
           </div>
