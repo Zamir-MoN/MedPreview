@@ -25,7 +25,7 @@ Format the output with clear Markdown headings, bullet points, and paragraphs. R
           'Content-Type': 'application/json',
           'X-API-Key': AI_API_KEY
         },
-        timeout: 90000 // 90 seconds timeout
+        timeout: 300000 // 5 minutes timeout to allow long generation
       }
     );
 
