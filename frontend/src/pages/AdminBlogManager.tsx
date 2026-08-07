@@ -9,6 +9,7 @@ export default function AdminBlogManager() {
   const [blogs, setBlogs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [generatingImageId, setGeneratingImageId] = useState<string | null>(null);
+  const [blogToDelete, setBlogToDelete] = useState<string | null>(null);
   
   // Edit modal state
   const [editingBlog, setEditingBlog] = useState<any | null>(null);
@@ -40,13 +41,20 @@ export default function AdminBlogManager() {
     }
   };
 
-  const deleteBlog = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this blog? This cannot be undone.')) return;
+  const confirmDelete = (id: string) => {
+    setBlogToDelete(id);
+  };
+
+  const deleteBlog = async () => {
+    if (!blogToDelete) return;
     try {
-      await axios.delete(`/api/blogs/${id}`);
-      setBlogs(blogs.filter(b => b.id !== id));
+      await axios.delete(`/api/blogs/${blogToDelete}`);
+      setBlogs(blogs.filter(b => b.id !== blogToDelete));
+      toast.success('Blog deleted successfully');
     } catch (error) {
       toast.error('Failed to delete blog');
+    } finally {
+      setBlogToDelete(null);
     }
   };
 
@@ -187,7 +195,7 @@ export default function AdminBlogManager() {
                             <Edit3 className="w-4 h-4" />
                           </button>
                           <button 
-                            onClick={() => deleteBlog(blog.id)}
+                            onClick={() => confirmDelete(blog.id)}
                             className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -287,6 +295,33 @@ export default function AdminBlogManager() {
                   <Check className="w-4 h-4" /> Save Changes
                 </button>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {blogToDelete && (
+        <div className="fixed inset-0 bg-dark/40 backdrop-blur-sm z-[60] flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl w-full max-w-sm flex flex-col shadow-2xl p-6 text-center animate-fade-up">
+            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Trash2 className="w-8 h-8 text-red-500" />
+            </div>
+            <h2 className="text-xl font-bold text-dark mb-2">Delete Blog</h2>
+            <p className="text-gray-500 text-sm mb-6">Are you sure you want to delete this blog? This action cannot be undone.</p>
+            <div className="flex gap-3">
+              <button 
+                onClick={() => setBlogToDelete(null)}
+                className="flex-1 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 transition-colors"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={deleteBlog}
+                className="flex-1 py-3 bg-red-500 text-white rounded-xl font-bold hover:bg-red-600 transition-colors"
+              >
+                Delete
+              </button>
             </div>
           </div>
         </div>
