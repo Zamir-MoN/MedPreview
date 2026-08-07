@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { generateBlogContent } from '../services/aiService';
+import { generateBlogContent, generateImageForExistingBlog } from '../services/aiService';
 import prisma from '../database/db';
 
 export const generateAiBlog = async (req: Request, res: Response): Promise<void> => {
@@ -89,5 +89,31 @@ export const deleteBlog = async (req: Request, res: Response): Promise<void> => 
     res.json({ success: true, message: 'Blog deleted successfully' });
   } catch (error: any) {
     res.status(500).json({ success: false, message: 'Failed to delete blog', error: error.message });
+  }
+};
+
+export const generateImageForBlog = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const id = req.params.id as string;
+    
+    const blog = await prisma.blog.findUnique({
+      where: { id }
+    });
+    
+    if (!blog) {
+      res.status(404).json({ success: false, message: 'Blog not found' });
+      return;
+    }
+
+    const updatedContent = await generateImageForExistingBlog(blog.title, blog.content);
+    
+    const updatedBlog = await prisma.blog.update({
+      where: { id },
+      data: { content: updatedContent }
+    });
+    
+    res.json({ success: true, blog: updatedBlog });
+  } catch (error: any) {
+    res.status(500).json({ success: false, message: 'Failed to generate image', error: error.message });
   }
 };

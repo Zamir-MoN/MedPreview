@@ -76,3 +76,30 @@ Format the output with clear Markdown headings, bullet points, and paragraphs. R
     throw new Error('Failed to generate AI content');
   }
 };
+
+export const generateImageForExistingBlog = async (topic: string, content: string): Promise<string> => {
+  let imagePrompt = topic;
+  const conclusionMatch = content.match(/##\s*Conclusion\s*([\s\S]*?)(?:##|$)/i);
+  if (conclusionMatch && conclusionMatch[1]) {
+    imagePrompt = conclusionMatch[1].trim().substring(0, 400); 
+  }
+
+  try {
+    const imgQuery = new URLSearchParams({
+      prompt: imagePrompt + ", highly detailed, professional medical illustration, clean style",
+      style: "realistic",
+      ar: "16:9"
+    });
+    
+    const imgResponse = await axios.get(`https://r-gengpt-api.vercel.app/api/image?${imgQuery.toString()}`);
+    
+    if (imgResponse.data && imgResponse.data.status === 'success' && imgResponse.data.data?.url) {
+      return `![Medical Illustration](${imgResponse.data.data.url})\n\n` + content;
+    }
+  } catch (imgError: any) {
+    console.error('Failed to generate image for existing blog', imgError.message);
+    throw new Error('Failed to generate image');
+  }
+
+  return content;
+};

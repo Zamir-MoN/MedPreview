@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Helmet } from 'react-helmet-async';
-import { Edit3, Trash2, Eye, EyeOff, Plus, FileText, X, Check } from 'lucide-react';
+import { Edit3, Trash2, Eye, EyeOff, Plus, FileText, X, Check, Image as ImageIcon, Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function AdminBlogManager() {
   const [blogs, setBlogs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [generatingImageId, setGeneratingImageId] = useState<string | null>(null);
   
   // Edit modal state
   const [editingBlog, setEditingBlog] = useState<any | null>(null);
@@ -60,6 +61,21 @@ export default function AdminBlogManager() {
       setEditingBlog(null);
     } catch (error) {
       alert('Failed to save changes');
+    }
+  };
+
+  const generateImage = async (id: string) => {
+    setGeneratingImageId(id);
+    try {
+      const response = await axios.post(`/api/blogs/${id}/generate-image`);
+      if (response.data.success) {
+        setBlogs(blogs.map(b => b.id === id ? response.data.blog : b));
+        alert('Image successfully generated and added to the blog!');
+      }
+    } catch (error) {
+      alert('Failed to generate image. Please try again.');
+    } finally {
+      setGeneratingImageId(null);
     }
   };
 
@@ -137,6 +153,14 @@ export default function AdminBlogManager() {
                             }`}
                           >
                             {blog.status === 'PUBLISHED' ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                          </button>
+                          <button 
+                            onClick={() => generateImage(blog.id)}
+                            disabled={generatingImageId === blog.id}
+                            title="Generate AI Image"
+                            className="p-2 text-purple-500 hover:bg-purple-50 rounded-lg transition-colors disabled:opacity-50"
+                          >
+                            {generatingImageId === blog.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <ImageIcon className="w-4 h-4" />}
                           </button>
                           <button 
                             onClick={() => setEditingBlog(blog)}
