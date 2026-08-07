@@ -11,6 +11,7 @@ interface BlogType {
   category: string;
   author: string;
   readTime: string;
+  coverImage?: string;
   content: string;
   createdAt: string;
 }
@@ -63,7 +64,7 @@ export default function BlogPost() {
   }
 
   const imgMatch = blog.content?.match(/!\[[^\]]*\]\(([^)]+)\)/);
-  const displayImage = imgMatch ? imgMatch[1].trim() : null;
+  const displayImage = blog.coverImage || (imgMatch ? imgMatch[1].trim() : null);
   const cleanContent = blog.content?.replace(/!\[[^\]]*\]\(([^)]+)\)\n*/, '');
 
   return (
