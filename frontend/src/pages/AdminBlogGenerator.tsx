@@ -10,6 +10,7 @@ export default function AdminBlogGenerator() {
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [generatedContent, setGeneratedContent] = useState('');
+  const [coverImage, setCoverImage] = useState<string | null>(null);
   const [blogMeta, setBlogMeta] = useState({ title: '', category: '', author: 'Dr. Jonathan', readTime: '5 min' });
   const [publishStatus, setPublishStatus] = useState({ loading: false, success: false, error: '' });
 
@@ -38,7 +39,15 @@ export default function AdminBlogGenerator() {
       });
       
       if (response.data.success) {
-        setGeneratedContent(response.data.content);
+        let content = response.data.content;
+        const imgMatch = content.match(/!\[[^\]]*\]\(([^)]+)\)/);
+        if (imgMatch) {
+          setCoverImage(imgMatch[1].trim());
+          content = content.replace(/!\[[^\]]*\]\(([^)]+)\)\n*/, '');
+        } else {
+          setCoverImage(null);
+        }
+        setGeneratedContent(content);
         // Auto-fill title based on topic
         setBlogMeta({ ...blogMeta, title: topic.charAt(0).toUpperCase() + topic.slice(1) });
       }
@@ -71,12 +80,14 @@ export default function AdminBlogGenerator() {
         author: blogMeta.author,
         readTime: blogMeta.readTime,
         content: generatedContent,
+        coverImage,
         status: 'PUBLISHED'
       });
       
       setPublishStatus({ loading: false, success: true, error: '' });
       setTimeout(() => {
         setGeneratedContent('');
+        setCoverImage(null);
         setTopic('');
         setBlogMeta({ title: '', category: '', author: 'Dr. Jonathan', readTime: '5 min' });
         setPublishStatus({ loading: false, success: false, error: '' });
@@ -197,11 +208,11 @@ export default function AdminBlogGenerator() {
                   </div>
                   <hr className="border-gray-100 my-2" />
                   
-                  {generatedContent && generatedContent.match(/!\[[^\]]*\]\(([^)]+)\)/) && (
+                  {coverImage && (
                     <div className="mt-2">
                       <label className="block text-xs font-bold text-gray-500 mb-2">Generated Image Preview</label>
                       <img 
-                        src={generatedContent.match(/!\[[^\]]*\]\(([^)]+)\)/)![1].trim()} 
+                        src={coverImage} 
                         alt="Blog Cover" 
                         className="w-full max-h-48 object-cover rounded-xl border border-gray-200"
                       />

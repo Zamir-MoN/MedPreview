@@ -64,14 +64,35 @@ export default function AdminBlogManager() {
     }
   };
 
+  const handleEditClick = (blog: BlogType) => {
+    let content = blog.content || '';
+    let coverImage = blog.coverImage || null;
+    
+    const imgMatch = content.match(/!\[[^\]]*\]\(([^)]+)\)/);
+    if (imgMatch) {
+      coverImage = imgMatch[1].trim();
+      content = content.replace(/!\[[^\]]*\]\(([^)]+)\)\n*/, '');
+    }
+    
+    setEditingBlog({ ...blog, content, coverImage });
+  };
+
   const generateImage = async (id: string) => {
     setGeneratingImageId(id);
     try {
       const response = await axios.post(`/api/blogs/${id}/generate-image`);
       if (response.data.success) {
-        setBlogs(blogs.map(b => b.id === id ? response.data.blog : b));
+        let updatedBlog = response.data.blog;
+        let content = updatedBlog.content || '';
+        const imgMatch = content.match(/!\[[^\]]*\]\(([^)]+)\)/);
+        if (imgMatch) {
+          updatedBlog.coverImage = imgMatch[1].trim();
+          updatedBlog.content = content.replace(/!\[[^\]]*\]\(([^)]+)\)\n*/, '');
+        }
+
+        setBlogs(blogs.map(b => b.id === id ? updatedBlog : b));
         if (editingBlog && editingBlog.id === id) {
-          setEditingBlog(response.data.blog);
+          setEditingBlog(updatedBlog);
         }
         alert('Image successfully generated and added to the blog!');
       }
@@ -158,7 +179,7 @@ export default function AdminBlogManager() {
                             {blog.status === 'PUBLISHED' ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                           </button>
                           <button 
-                            onClick={() => setEditingBlog(blog)}
+                            onClick={() => handleEditClick(blog)}
                             className="p-2 text-blue-500 hover:bg-blue-50 rounded-lg transition-colors"
                           >
                             <Edit3 className="w-4 h-4" />
@@ -209,11 +230,11 @@ export default function AdminBlogManager() {
                 </div>
               </div>
               
-              {editingBlog.content && editingBlog.content.match(/!\[[^\]]*\]\(([^)]+)\)/) && (
+              {editingBlog.coverImage && (
                 <div className="mt-2">
                   <label className="block text-xs font-bold text-gray-500 mb-2">Generated Image Preview</label>
                   <img 
-                    src={editingBlog.content.match(/!\[[^\]]*\]\(([^)]+)\)/)[1].trim()} 
+                    src={editingBlog.coverImage} 
                     alt="Blog Cover" 
                     className="w-full max-h-48 object-cover rounded-xl border border-gray-200"
                   />
