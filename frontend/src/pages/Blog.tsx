@@ -12,6 +12,7 @@ interface BlogType {
   coverImage?: string;
   category: string;
   description: string;
+  content?: string;
   readTime: string;
   createdAt: string;
 }
@@ -66,11 +67,15 @@ export default function Blog() {
           </div>
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {blogs.map((blog) => (
+            {blogs.map((blog) => {
+              const imgMatch = blog.content?.match(/!\[.*?\]\((.*?)\)/);
+              const displayImage = blog.coverImage || (imgMatch ? imgMatch[1] : null);
+
+              return (
               <div key={blog.id} className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300 fade-up-item group flex flex-col">
                 <div className="h-48 bg-gray-200 overflow-hidden relative">
-                  {blog.coverImage ? (
-                    <img src={blog.coverImage} alt={blog.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  {displayImage ? (
+                    <img src={displayImage} alt={blog.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                   ) : (
                     <div className="w-full h-full bg-gradient-to-br from-blue-100 to-cyan-100 flex items-center justify-center text-primary font-bold text-2xl">
                       {blog.category}
@@ -95,7 +100,8 @@ export default function Blog() {
                   </Link>
                 </div>
               </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
