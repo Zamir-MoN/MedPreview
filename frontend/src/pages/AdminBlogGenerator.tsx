@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Helmet } from 'react-helmet-async';
 import { Sparkles, Save, X, Edit3, FileText } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 export default function AdminBlogGenerator() {
   const [topic, setTopic] = useState('');
@@ -52,7 +53,7 @@ export default function AdminBlogGenerator() {
         setBlogMeta({ ...blogMeta, title: topic.charAt(0).toUpperCase() + topic.slice(1) });
       }
     } catch (error: any) {
-      alert('Failed to generate AI content. Please try again.');
+      toast.error('Failed to generate AI content. Please try again.');
     } finally {
       clearInterval(interval);
       setProgress(100);
@@ -62,7 +63,7 @@ export default function AdminBlogGenerator() {
 
   const handlePublish = async () => {
     if (!generatedContent || !blogMeta.title || !blogMeta.category) {
-      alert('Please fill in title and category before publishing.');
+      toast.error('Please fill in title and category before publishing.');
       return;
     }
 

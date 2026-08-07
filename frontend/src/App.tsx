@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Lenis from '@studio-freight/lenis';
 import { HelmetProvider } from 'react-helmet-async';
+import { Toaster } from 'react-hot-toast';
 
 // Layout
 import Layout from './components/Layout';
@@ -42,6 +43,32 @@ function App() {
 
   return (
     <HelmetProvider>
+      <Toaster 
+        position="top-center" 
+        toastOptions={{
+          style: {
+            background: '#0F172A',
+            color: '#fff',
+            borderRadius: '16px',
+            padding: '16px 24px',
+            fontSize: '14px',
+            fontWeight: '600',
+            boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'
+          },
+          success: {
+            iconTheme: {
+              primary: '#10B981',
+              secondary: '#fff',
+            },
+          },
+          error: {
+            iconTheme: {
+              primary: '#EF4444',
+              secondary: '#fff',
+            },
+          },
+        }}
+      />
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Layout />}>

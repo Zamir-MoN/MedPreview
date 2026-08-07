@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Helmet } from 'react-helmet-async';
 import { Edit3, Trash2, Eye, EyeOff, Plus, FileText, X, Check, Image as ImageIcon, Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 export default function AdminBlogManager() {
   const [blogs, setBlogs] = useState<any[]>([]);
@@ -35,7 +36,7 @@ export default function AdminBlogManager() {
       await axios.put(`/api/blogs/${blog.id}`, { status: newStatus });
       setBlogs(blogs.map(b => b.id === blog.id ? { ...b, status: newStatus } : b));
     } catch (error) {
-      alert('Failed to update status');
+      toast.error('Failed to update status');
     }
   };
 
@@ -45,7 +46,7 @@ export default function AdminBlogManager() {
       await axios.delete(`/api/blogs/${id}`);
       setBlogs(blogs.filter(b => b.id !== id));
     } catch (error) {
-      alert('Failed to delete blog');
+      toast.error('Failed to delete blog');
     }
   };
 
@@ -60,7 +61,7 @@ export default function AdminBlogManager() {
       setBlogs(blogs.map(b => b.id === editingBlog.id ? editingBlog : b));
       setEditingBlog(null);
     } catch (error) {
-      alert('Failed to save changes');
+      toast.error('Failed to save changes');
     }
   };
 
@@ -94,10 +95,10 @@ export default function AdminBlogManager() {
         if (editingBlog && editingBlog.id === id) {
           setEditingBlog(updatedBlog);
         }
-        alert('Image successfully generated and added to the blog!');
+        toast.success('Image successfully generated and added to the blog!');
       }
     } catch (error) {
-      alert('Failed to generate image. Please try again.');
+      toast.error('Failed to generate image. Please try again.');
     } finally {
       setGeneratingImageId(null);
     }
