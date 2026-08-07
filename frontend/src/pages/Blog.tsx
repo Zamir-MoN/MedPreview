@@ -24,7 +24,7 @@ export default function Blog() {
     // Fetch blogs from API
     const fetchBlogs = async () => {
       try {
-        const response = await axios.get('http://localhost:8400/api/blogs');
+        const response = await axios.get('/api/blogs');
         if (response.data.success) {
           setBlogs(response.data.blogs);
         }

@@ -22,7 +22,7 @@ export default function BlogPost() {
   useEffect(() => {
     const fetchBlog = async () => {
       try {
-        const response = await axios.get(`http://localhost:8400/api/blogs/${slug}`);
+        const response = await axios.get(`/api/blogs/${slug}`);
         if (response.data.success) {
           setBlog(response.data.blog);
         }

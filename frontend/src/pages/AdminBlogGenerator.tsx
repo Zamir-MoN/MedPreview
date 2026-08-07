@@ -20,7 +20,7 @@ export default function AdminBlogGenerator() {
     setPublishStatus({ loading: false, success: false, error: '' });
 
     try {
-      const response = await axios.post('http://localhost:8400/api/blogs/generate-ai', {
+      const response = await axios.post('/api/blogs/generate-ai', {
         topic,
         tone
       });
@@ -49,7 +49,7 @@ export default function AdminBlogGenerator() {
       const slug = blogMeta.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
       const description = generatedContent.substring(0, 150) + '...';
 
-      await axios.post('http://localhost:8400/api/blogs', {
+      await axios.post('/api/blogs', {
         title: blogMeta.title,
         slug,
         category: blogMeta.category,
