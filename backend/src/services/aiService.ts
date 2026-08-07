@@ -44,6 +44,32 @@ Format the output with clear Markdown headings, bullet points, and paragraphs. R
       // Output is not JSON, which is fine. Use raw text.
     }
 
+    // Try to extract the Conclusion or a good summary for the image prompt
+    let imagePrompt = topic;
+    const conclusionMatch = finalContent.match(/##\s*Conclusion\s*([\s\S]*?)(?:##|$)/i);
+    if (conclusionMatch && conclusionMatch[1]) {
+      // Use up to 400 characters from the conclusion to avoid URL too long errors
+      imagePrompt = conclusionMatch[1].trim().substring(0, 400); 
+    }
+
+    // Generate an image using the external AI image API
+    try {
+      const imgQuery = new URLSearchParams({
+        prompt: imagePrompt + ", highly detailed, professional medical illustration, clean style",
+        style: "realistic",
+        ar: "16:9"
+      });
+      
+      const imgResponse = await axios.get(`https://r-gengpt-api.vercel.app/api/image?${imgQuery.toString()}`);
+      
+      if (imgResponse.data && imgResponse.data.status === 'success' && imgResponse.data.data?.url) {
+        // Prepend the generated image to the top of the blog content
+        finalContent = `![Medical Illustration](${imgResponse.data.data.url})\n\n` + finalContent;
+      }
+    } catch (imgError: any) {
+      console.error('Failed to generate image, proceeding with text only.', imgError.message);
+    }
+
     return finalContent;
   } catch (error: any) {
     console.error('Error calling AI API:', error.response?.data || error.message);
