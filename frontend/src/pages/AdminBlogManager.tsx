@@ -70,6 +70,9 @@ export default function AdminBlogManager() {
       const response = await axios.post(`/api/blogs/${id}/generate-image`);
       if (response.data.success) {
         setBlogs(blogs.map(b => b.id === id ? response.data.blog : b));
+        if (editingBlog && editingBlog.id === id) {
+          setEditingBlog(response.data.blog);
+        }
         alert('Image successfully generated and added to the blog!');
       }
     } catch (error) {
@@ -236,19 +239,30 @@ export default function AdminBlogManager() {
               </div>
             </div>
 
-            <div className="p-6 border-t border-gray-100 flex justify-end gap-3">
+            <div className="p-6 border-t border-gray-100 flex justify-between items-center gap-3">
               <button 
-                onClick={() => setEditingBlog(null)}
-                className="px-6 py-2 text-gray-500 font-bold hover:bg-gray-100 rounded-xl transition-colors"
+                onClick={() => generateImage(editingBlog.id)}
+                disabled={generatingImageId === editingBlog.id}
+                className="flex items-center gap-2 px-4 py-2 text-purple-600 bg-purple-50 hover:bg-purple-100 rounded-xl font-bold transition-colors disabled:opacity-50"
               >
-                Cancel
+                {generatingImageId === editingBlog.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <ImageIcon className="w-4 h-4" />}
+                Generate Image
               </button>
-              <button 
-                onClick={saveEdit}
-                className="bg-primary text-white px-6 py-2 rounded-xl font-bold shadow-md shadow-primary/20 hover:-translate-y-1 transition-all flex items-center gap-2"
-              >
-                <Check className="w-4 h-4" /> Save Changes
-              </button>
+              
+              <div className="flex gap-3">
+                <button 
+                  onClick={() => setEditingBlog(null)}
+                  className="px-6 py-2 text-gray-500 font-bold hover:bg-gray-100 rounded-xl transition-colors"
+                >
+                  Cancel
+                </button>
+                <button 
+                  onClick={saveEdit}
+                  className="bg-primary text-white px-6 py-2 rounded-xl font-bold shadow-md shadow-primary/20 hover:-translate-y-1 transition-all flex items-center gap-2"
+                >
+                  <Check className="w-4 h-4" /> Save Changes
+                </button>
+              </div>
             </div>
           </div>
         </div>
