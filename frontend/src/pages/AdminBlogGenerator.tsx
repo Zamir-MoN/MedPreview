@@ -196,6 +196,18 @@ export default function AdminBlogGenerator() {
                     </div>
                   </div>
                   <hr className="border-gray-100 my-2" />
+                  
+                  {generatedContent && generatedContent.match(/!\[.*?\]\((.*?)\)/) && (
+                    <div className="mt-2">
+                      <label className="block text-xs font-bold text-gray-500 mb-2">Generated Image Preview</label>
+                      <img 
+                        src={generatedContent.match(/!\[.*?\]\((.*?)\)/)![1]} 
+                        alt="Blog Cover" 
+                        className="w-full max-h-48 object-cover rounded-xl border border-gray-200"
+                      />
+                    </div>
+                  )}
+
                   <textarea 
                     data-lenis-prevent
                     value={generatedContent}
