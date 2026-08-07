@@ -58,8 +58,37 @@ export default function Blog() {
         </div>
 
         {loading ? (
-          <div className="flex justify-center py-20">
-            <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <div key={i} className="bg-white rounded-3xl overflow-hidden shadow-sm flex flex-col animate-pulse">
+                {/* Image Skeleton */}
+                <div className="h-48 bg-gray-200/60 relative">
+                  <div className="absolute top-4 left-4 bg-gray-300/60 w-16 h-6 rounded-full"></div>
+                </div>
+                
+                {/* Content Skeleton */}
+                <div className="p-6 flex flex-col flex-grow">
+                  {/* Meta Skeleton */}
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="w-16 h-3 bg-gray-200/60 rounded"></div>
+                    <div className="w-16 h-3 bg-gray-200/60 rounded"></div>
+                  </div>
+                  
+                  {/* Title Skeleton */}
+                  <div className="h-6 bg-gray-200/60 rounded w-3/4 mb-4"></div>
+                  
+                  {/* Description Skeleton */}
+                  <div className="space-y-2 mb-8">
+                    <div className="h-3 bg-gray-200/60 rounded w-full"></div>
+                    <div className="h-3 bg-gray-200/60 rounded w-5/6"></div>
+                    <div className="h-3 bg-gray-200/60 rounded w-4/6"></div>
+                  </div>
+                  
+                  {/* Button Skeleton */}
+                  <div className="mt-auto w-24 h-4 bg-gray-200/60 rounded"></div>
+                </div>
+              </div>
+            ))}
           </div>
         ) : blogs.length === 0 ? (
           <div className="text-center py-20 bg-gray-50 rounded-2xl">
