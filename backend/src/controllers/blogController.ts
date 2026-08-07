@@ -32,7 +32,7 @@ export const getBlogs = async (req: Request, res: Response): Promise<void> => {
 
 export const getBlogBySlug = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { slug } = req.params;
+    const slug = req.params.slug as string;
     const blog = await prisma.blog.findUnique({
       where: { slug }
     });
