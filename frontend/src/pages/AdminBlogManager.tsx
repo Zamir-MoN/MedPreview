@@ -64,7 +64,7 @@ export default function AdminBlogManager() {
     }
   };
 
-  const handleEditClick = (blog: BlogType) => {
+  const handleEditClick = (blog: any) => {
     let content = blog.content || '';
     let coverImage = blog.coverImage || null;
     
