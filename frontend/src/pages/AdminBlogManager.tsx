@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Helmet } from 'react-helmet-async';
-import { Edit3, Trash2, Eye, EyeOff, Plus, FileText, X, Check, Image as ImageIcon, Loader2, Globe } from 'lucide-react';
+import { Edit3, Trash2, EyeOff, Plus, FileText, X, Check, Image as ImageIcon, Loader2, Globe } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
