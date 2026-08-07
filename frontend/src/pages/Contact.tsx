@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { animateFadeUp } from '../animations/gsap';
 import { MapPin, Phone, Mail, Clock } from 'lucide-react';
-import axios from 'axios';
 
 export default function Contact() {
   const [formData, setFormData] = useState({
