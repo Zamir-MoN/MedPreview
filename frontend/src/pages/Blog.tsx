@@ -93,7 +93,9 @@ export default function Blog() {
                   <h3 className="text-xl font-bold text-dark mb-3 group-hover:text-primary transition-colors line-clamp-2">
                     <Link to={`/blog/${blog.slug}`}>{blog.title}</Link>
                   </h3>
-                  <p className="text-gray-600 text-sm mb-6 line-clamp-3">{blog.description}</p>
+                  <p className="text-gray-600 text-sm mb-6 line-clamp-3">
+                    {blog.description?.replace(/!\[[^\]]*\]\(([^)]+)\)\s*/g, '').replace(/#+\s*/g, '')}
+                  </p>
                   
                   <Link to={`/blog/${blog.slug}`} className="mt-auto flex items-center gap-2 text-primary font-bold text-sm hover:text-secondary transition-colors group/link">
                     Read Article <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1 transition-transform" />
