@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
-import CountUp from 'react-countup';
 import { ArrowRight, Activity, Heart, Shield } from 'lucide-react';
 import { animateFadeUp, animateScale } from '../animations/gsap';
 
@@ -91,7 +90,7 @@ export default function Home() {
               <div>
                 <p className="text-xs text-gray-500 font-medium">Happy Patients</p>
                 <p className="text-xl font-bold text-dark">
-                  <CountUp end={15000} suffix="+" duration={3} />
+                  15,000+
                 </p>
               </div>
             </motion.div>
@@ -111,7 +110,7 @@ export default function Home() {
             ].map((stat, idx) => (
               <div key={idx} className="text-center fade-up-item">
                 <h3 className="text-4xl md:text-5xl font-bold text-primary mb-2">
-                  <CountUp end={stat.value} duration={3} enableScrollSpy />{stat.suffix}
+                  {stat.value}{stat.suffix}
                 </h3>
                 <p className="text-gray-500 font-medium">{stat.label}</p>
               </div>
