@@ -7,14 +7,14 @@ export default defineConfig({
   server: {
     port: 4100,
     proxy: {
-      '/api': 'http://localhost:8400',
-      '/uploads': 'http://localhost:8400'
+      '/api': 'http://localhost:7291',
+      '/uploads': 'http://localhost:7291'
     }
   },
   preview: {
     proxy: {
-      '/api': 'http://localhost:8400',
-      '/uploads': 'http://localhost:8400'
+      '/api': 'http://localhost:7291',
+      '/uploads': 'http://localhost:7291'
     }
   }
 })
