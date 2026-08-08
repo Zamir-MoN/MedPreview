@@ -14,7 +14,7 @@ module.exports = {
     {
       name: "medpreview-frontend",
       script: "npm",
-      args: "run preview -- --port 4100 --host",
+      args: "run preview -- --port 80 --host",
       cwd: "./frontend",
       env: {
         NODE_ENV: "production"
