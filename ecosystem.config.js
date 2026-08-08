@@ -8,13 +8,13 @@ module.exports = {
       exec_mode: "cluster",
       env: {
         NODE_ENV: "production",
-        PORT: 8400
+        PORT: 7291
       }
     },
     {
       name: "medpreview-frontend",
       script: "npm",
-      args: "run preview -- --port 80 --host",
+      args: "run preview -- --port 4821 --host",
       cwd: "./frontend",
       env: {
         NODE_ENV: "production"

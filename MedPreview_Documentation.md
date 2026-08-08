@@ -13,7 +13,7 @@ The project is structured into two main components:
    - **Styling:** Tailwind CSS to achieve a luxury glassmorphism aesthetic.
    - **Animations:** GSAP and Framer Motion for dynamic, smooth micro-interactions.
    - **Scrolling:** Lenis for smooth scrolling effects.
-   - **Deployment:** Compiled into static HTML/CSS/JS (`dist` directory) to be served efficiently via Nginx.
+   - **Deployment:** Compiled into static HTML/CSS/JS (`dist` directory) to be served directly via PM2.
 
 2. **Backend**:
    - **Framework:** Node.js with Express.
@@ -27,18 +27,16 @@ The project is structured into two main components:
 3. **Process Management**:
    - **PM2:** Used to run and persist the Node.js backend cluster, keeping it alive across crashes or system reboots.
 
-4. **Web Server / Reverse Proxy**:
-   - **Nginx:** Acts as the entry point for all web traffic. It serves the React static files directly for maximum performance and proxies any `/api/` or `/uploads/` requests to the Node.js backend.
+
 
 ## How It Works
 
-1. **User Interaction:** A user visits the frontend (e.g., `drjonathan.com`). Nginx serves the React application directly from the `frontend/dist` directory.
-2. **API Requests:** When a user submits an appointment or requests an AI-generated blog, the frontend makes an HTTP request to `/api/...`.
-3. **Reverse Proxy:** Nginx intercepts the `/api/` request and proxies it to the local backend running on port `8400`. The Nginx configuration explicitly increases timeouts to 300 seconds to accommodate potentially slow AI-generation tasks.
+1. **User Interaction:** A user visits the frontend via the direct PM2 preview port.
+2. **API Requests:** When a user submits an appointment or requests an AI-generated blog, the frontend makes an HTTP request directly to the backend API port.
 4. **Backend Processing:** 
    - For database operations (like saving appointments), the backend communicates with the SQLite database using Prisma.
    - For AI content generation, the backend reaches out to the MedEngine API, awaits the response, and returns the result to the frontend.
-5. **Static Uploads:** Any files uploaded by users or generated dynamically are stored in the `/uploads/` directory on the backend and are served back through the `/uploads/` route, which is also proxied by Nginx.
+4. **Static Uploads:** Any files uploaded by users or generated dynamically are stored in the `/uploads/` directory on the backend and are served back directly.
 
 ## Network Ports Used
 
@@ -46,10 +44,8 @@ Below is a detailed breakdown of the network ports utilized by this project:
 
 | Port | Protocol | Service | Description |
 |------|----------|---------|-------------|
-| **80** | TCP | HTTP (Nginx) | Default web traffic port. Usually redirects to HTTPS. Nginx listens here for incoming connections from the internet. |
-| **443** | TCP | HTTPS (Nginx) | Secure web traffic port. Configured via Certbot/Let's Encrypt for encrypted communication between the user's browser and the server. |
-| **8400** | TCP | Node.js Backend | The internal port where the Express backend API runs. It is not exposed to the public internet directly; Nginx acts as a proxy for it. |
-| **4100** | TCP | Frontend Preview | (Optional) Port used by the Vite frontend preview server when started via PM2 (`ecosystem.config.js`). In a standard Nginx static deployment, this port is typically not required for production routing, but is available for testing. |
+| **4821** | TCP | PM2 Frontend | The custom port running the React frontend application via PM2 preview. |
+| **7291** | TCP | Node.js Backend | The internal port where the Express backend API runs. Handles all database and AI requests. |
 
 ### Firewall Rules Note
-For a standard deployment, only ports **80** and **443** (along with standard SSH, port 22) need to be open to the public on the server's firewall. Ports **8400** and **4100** should remain strictly internal.
+For a standard PM2-only deployment, ports **4821** and **7291** (along with standard SSH, port 22) need to be open to the public on the server's firewall.

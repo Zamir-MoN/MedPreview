@@ -46,17 +46,4 @@ pm2 start ecosystem.config.js
 pm2 save
 pm2 startup
 ```
-
-3. Setup Nginx:
-Copy `nginx.conf` to `/etc/nginx/sites-available/medpreview` and symlink it to `sites-enabled`.
-Reload Nginx.
-```bash
-sudo ln -s /etc/nginx/sites-available/medpreview /etc/nginx/sites-enabled/
-sudo nginx -t
-sudo systemctl reload nginx
-```
-
-4. Enable SSL with Certbot:
-```bash
-sudo certbot --nginx -d drjonathan.com -d www.drjonathan.com
 ```

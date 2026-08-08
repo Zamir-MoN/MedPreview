@@ -76,7 +76,7 @@ Use the provided `ecosystem.config.js` to start both the backend and frontend se
 ```bash
 cd ~/medpreview
 
-# Start the application using PM2 (Note: Port 80 might require you to run as root, e.g. `sudo pm2 start ecosystem.config.js` or configure authbind)
+# Start the application using PM2
 pm2 start ecosystem.config.js
 
 # Save PM2 state to restart on server reboot
@@ -89,10 +89,10 @@ pm2 startup
 
 Open the necessary ports for HTTP (Frontend) and Backend API:
 ```bash
-sudo ufw allow 80/tcp    # Frontend
-sudo ufw allow 8400/tcp  # Backend API
+sudo ufw allow 4821/tcp  # Frontend
+sudo ufw allow 7291/tcp  # Backend API
 sudo ufw allow OpenSSH
 sudo ufw enable
 ```
 
-Your MedPreview instance should now be live and accessible directly via your server's IP address!
+Your MedPreview instance should now be live and accessible directly via your server's IP address on port 4821 (e.g., http://your-ip:4821)!
