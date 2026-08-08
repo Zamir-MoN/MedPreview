@@ -10,7 +10,7 @@ export const generateBlogContent = async (topic: string, tone: string = 'Profess
   try {
     const instruction = `You are a professional medical writer. Write an informative blog article about '${topic}'.
 Target Audience: General Public. Tone: ${tone}.
-Format the output with clear Markdown headings, bullet points, and paragraphs. Return raw text only.`;
+Format the output with clear Markdown headings, bullet points, and paragraphs. You MUST write the ENTIRE article strictly in English. Return raw text only.`;
 
     const response = await axios.post(
       AI_API_URL,
